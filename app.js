@@ -30,7 +30,7 @@ app.use("/api/article", articleRouter);
 app.use("/api/service", serviceRouter);
 app.use(errorMiddlewareHandler);
 app.listen(PORT, async () => {
-  console.log("listening on port", PORT);
+  console.log("listening on Port", PORT);
   await connectDatabase();
 });
 
