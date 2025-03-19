@@ -29,7 +29,7 @@ app.use("/api/comments", commentRouter);
 app.use("/api/article", articleRouter);
 app.use("/api/service", serviceRouter);
 app.use(errorMiddlewareHandler);
-app.listen(PORT, async () => {
+app.listen(PORT || 8000, async () => {
   console.log("listening on Port", PORT);
   await connectDatabase();
 });
