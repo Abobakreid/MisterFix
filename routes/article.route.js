@@ -3,7 +3,10 @@ import {
   createArticle,
   deleteArticle,
   getArticle,
+  getArticleBy,
   getArticles,
+  getLimitedArticles,
+  searchArticles,
   updateArticle,
 } from "../controllers/article.controller.js";
 import authorizeMiddleware from "../middlewares/auth.middleware.js";
@@ -22,9 +25,13 @@ articleRouter.post(
   createArticle
 );
 
+articleRouter.post("/getArticleBy", getArticleBy);
+articleRouter.get("/limited", getLimitedArticles);
 articleRouter.get("/", getArticles);
+articleRouter.get("/search", searchArticles);
 articleRouter.get("/:id", getArticle);
 articleRouter.delete("/:id", authorizeMiddleware, deleteArticle);
+
 articleRouter.put(
   "/:id",
   authorizeMiddleware,

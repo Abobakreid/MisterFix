@@ -50,7 +50,13 @@ const getUsers = async (req, res, next) => {
 const getUser = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
     const user = await User.findById(id);
+
     res.status(200).json({ success: true, data: user });
   } catch (error) {
     next(error);
@@ -60,6 +66,11 @@ const getUser = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
     const user = await User.deleteOne({
       _id: id,
     });
@@ -72,6 +83,11 @@ const deleteUser = async (req, res, next) => {
 const updateUser = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
     const { name, role, password } = req.body;
     const updatedUser = await User.findByIdAndUpdate(
       id,

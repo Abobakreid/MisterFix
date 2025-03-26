@@ -34,7 +34,7 @@ const createComment = async (req, res, next) => {
 
 const getComments = async (req, res, next) => {
   try {
-    const Comments = await Comment.find();
+    const Comments = await Comment.find().populate("article");
     res.status(200).json({
       success: true,
       data: Comments,
@@ -47,6 +47,11 @@ const getComments = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     const articleId = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(articleId)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
 
     const newComment = await Comment.deleteOne(articleId);
     res.status(200).json({

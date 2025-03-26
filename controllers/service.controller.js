@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import Service from "../models/service.model.js";
+import Article from "../models/article.model.js";
 
 const createService = async (req, res, next) => {
   const session = await mongoose.startSession();
@@ -47,6 +48,15 @@ const getServices = async (req, res, next) => {
 const getService = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
+    const limit = parseInt(req.query.limit) || 10;
+    const page = parseInt(req.query.page) || 1;
+    const skip = (page - 1) * limit;
+
     const existService = await Service.findById(id);
     if (!existService) {
       const error = new Error("Service not found");
@@ -54,9 +64,26 @@ const getService = async (req, res, next) => {
       throw error;
     }
 
+    const total = await Article.countDocuments({ service: existService._id });
+
+    const ServiceArticles = await Article.find({
+      service: existService._id,
+    })
+      .skip(skip)
+      .limit(limit);
+
     res.status(200).json({
       success: true,
-      data: existService,
+      data: {
+        service: existService,
+        articles: ServiceArticles,
+        pagination: {
+          current_page: page,
+          per_page: limit,
+          total,
+          total_pages: Math.ceil(total / limit),
+        },
+      },
     });
   } catch (error) {
     next(error);
@@ -66,6 +93,11 @@ const getService = async (req, res, next) => {
 const updateService = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
     const { name } = req.body;
     const updatedService = await Service.findByIdAndUpdate(
       id,
@@ -97,6 +129,11 @@ const updateService = async (req, res, next) => {
 const deleteService = async (req, res, next) => {
   try {
     const id = req.params.id;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      const error = new Error("invalid id");
+      error.statusCode = 400;
+      throw error;
+    }
     const deletedService = await Service.findByIdAndDelete(id);
 
     if (!deletedService) {

@@ -7,12 +7,19 @@ const authorizeMiddleware = async (req, res, next) => {
     let token;
     const authorization =
       req.headers.authorization || req.headers.Authorization;
+
+    if (!authorization) {
+      const error = new Error("should send with request headers token");
+      error.statusCode = 401;
+      throw error;
+    }
+
     if (authorization || authorization.startsWith("Bearer")) {
       token = authorization.split(" ")[1];
     }
 
     if (!token)
-      return res.status(4001).json({
+      return res.status(401).json({
         message: "unauthorized",
       });
 
@@ -21,7 +28,7 @@ const authorizeMiddleware = async (req, res, next) => {
     const response = await User.findById(decoded.userId);
 
     if (!response)
-      return res.status(4001).json({
+      return res.status(401).json({
         message: "unauthorized",
       });
 

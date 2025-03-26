@@ -40,7 +40,7 @@ const articleSchema = new mongoose.Schema(
             },
           },
         ],
-        image: { type: String, required: true },
+        image: { type: String },
       },
     ],
     image: {

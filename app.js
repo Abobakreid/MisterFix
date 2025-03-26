@@ -13,6 +13,9 @@ import articleRouter from "./routes/article.route.js";
 import authorizeMiddleware from "./middlewares/auth.middleware.js";
 import serviceRouter from "./routes/service.route.js";
 import errorMiddlewareHandler from "./middlewares/error.middleware.js";
+import path, { dirname } from "path";
+import { fileURLToPath } from "url";
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 let app = express();
 
@@ -21,7 +24,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
-// app.use(express.static(path.join(__dirname, "public")));
+
+app.use("/images", express.static(path.join(__dirname, "public/images")));
+
 app.use("/api/auth", authRouter);
 app.use("/api/user", authorizeMiddleware, userRouter);
 app.use("/api/city", cityRouter);
