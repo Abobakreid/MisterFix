@@ -19,6 +19,12 @@ const createArticle = async (req, res, next) => {
       ? subArticles
       : JSON.parse(subArticles || "[]");
 
+    if (!Array.isArray(parsedSubArticles)) {
+      const error = new Error("subArticles should be an array");
+      error.statusCode = 400;
+      throw error;
+    }
+
     const mainImage = req.files["image"]?.[0].filename
       ? `/images/${req.files["image"]?.[0].filename}`
       : null;
