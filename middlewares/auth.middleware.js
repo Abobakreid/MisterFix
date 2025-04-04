@@ -32,7 +32,7 @@ const authorizeMiddleware = async (req, res, next) => {
         message: "unauthorized",
       });
 
-    res.user = response;
+    req.user = response;
     next();
   } catch (error) {
     next(error);

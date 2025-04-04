@@ -70,6 +70,9 @@ const getCity = async (req, res, next) => {
     const cityArticles = await Article.find({
       city: existCity._id,
     })
+      .populate("service")
+      .populate("city")
+      .populate("user")
       .skip(skip)
       .limit(limit);
 

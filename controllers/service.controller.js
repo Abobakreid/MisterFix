@@ -69,6 +69,8 @@ const getService = async (req, res, next) => {
     const ServiceArticles = await Article.find({
       service: existService._id,
     })
+      .populate("service")
+      .populate("city")
       .skip(skip)
       .limit(limit);
 

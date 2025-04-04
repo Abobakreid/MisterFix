@@ -215,10 +215,7 @@ const getArticle = async (req, res, next) => {
       {
         new: true,
       }
-    )
-      .populate("service")
-      .populate("city")
-      .populate("user", "name email");
+    );
 
     if (!article) {
       const error = new Error("service not found");
@@ -242,6 +239,7 @@ const getArticle = async (req, res, next) => {
     next(error);
   }
 };
+
 const getArticleBy = async (req, res, next) => {
   try {
     const { cityId, serviceId } = req.body;
